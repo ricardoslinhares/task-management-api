@@ -1,0 +1,98 @@
+package com.tarefas;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "tasks")
+public class Task {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String titulo;
+
+    @Column(length = 500)
+    private String descricao;
+
+    @Column(nullable = false)
+    private Boolean concluida = false;
+
+    @Column(name = "data_criacao", nullable = false, updatable = false)
+    private LocalDateTime dataCriacao;
+
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
+
+    @PrePersist
+    protected void onCreate() {
+        dataCriacao = LocalDateTime.now();
+        dataAtualizacao = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        dataAtualizacao = LocalDateTime.now();
+    }
+
+    // Construtores
+    public Task() {
+    }
+
+    public Task(String titulo, String descricao) {
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.concluida = false;
+    }
+
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Boolean getConcluida() {
+        return concluida;
+    }
+
+    public void setConcluida(Boolean concluida) {
+        this.concluida = concluida;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+}
