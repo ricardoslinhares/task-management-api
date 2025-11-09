@@ -1,4 +1,4 @@
-package com.tarefas;
+package com.tarefas.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

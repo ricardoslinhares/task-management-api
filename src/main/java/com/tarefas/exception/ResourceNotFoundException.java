@@ -1,4 +1,4 @@
-package com.tarefas;
+package com.tarefas.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package com.tarefas;
+package com.tarefas.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

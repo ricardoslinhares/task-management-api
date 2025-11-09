@@ -8,6 +8,7 @@ API RESTful desenvolvida em Spring Boot para gerenciamento de tarefas pessoais.
 - **Spring Boot 3.3.5**
 - **Spring Data JPA**
 - **Spring Validation** (validação de dados)
+- **Swagger/OpenAPI** (documentação automática)
 - **H2 Database** (banco de dados em memória)
 - **Maven**
 
@@ -18,6 +19,9 @@ API RESTful desenvolvida em Spring Boot para gerenciamento de tarefas pessoais.
 - ✅ Tratamento de exceções personalizado
 - ✅ Respostas HTTP padronizadas
 - ✅ Mensagens de erro descritivas
+- ✅ Versionamento de API (v1)
+- ✅ Documentação Swagger UI
+- ✅ Arquitetura em camadas (Controller, Service, Repository)
 
 ## Como Executar o Projeto
 
@@ -47,22 +51,36 @@ run.bat
 
 5. Para parar a aplicação, pressione `Ctrl + C`
 
+## Documentação da API (Swagger)
+
+Acesse a documentação interativa da API através do Swagger UI:
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+Você pode testar todos os endpoints diretamente pelo navegador!
+
+---
+
 ## Endpoints da API
 
 ### Base URL
 ```
-http://localhost:8080/api/tasks
+http://localhost:8080/api/v1/tasks
 ```
+
+**Versão da API:** v1
 
 ### 1. GET - Listar todas as tarefas
 
-**Endpoint:** `GET /api/tasks`
+**Endpoint:** `GET /api/v1/tasks`
 
 **Descrição:** Recupera a lista de todas as tarefas cadastradas.
 
 **Exemplo de requisição:**
 ```http
-GET http://localhost:8080/api/tasks
+GET http://localhost:8080/api/v1/tasks
 ```
 
 **Resposta de sucesso (200 OK):**
@@ -83,13 +101,13 @@ GET http://localhost:8080/api/tasks
 
 ### 2. POST - Criar nova tarefa
 
-**Endpoint:** `POST /api/tasks`
+**Endpoint:** `POST /api/v1/tasks`
 
 **Descrição:** Adiciona uma nova tarefa.
 
 **Exemplo de requisição:**
 ```http
-POST http://localhost:8080/api/tasks
+POST http://localhost:8080/api/v1/tasks
 Content-Type: application/json
 
 {
@@ -115,13 +133,13 @@ Content-Type: application/json
 
 ### 3. PUT - Atualizar tarefa existente
 
-**Endpoint:** `PUT /api/tasks/{id}`
+**Endpoint:** `PUT /api/v1/tasks/{id}`
 
 **Descrição:** Atualiza os dados de uma tarefa existente.
 
 **Exemplo de requisição:**
 ```http
-PUT http://localhost:8080/api/tasks/1
+PUT http://localhost:8080/api/v1/tasks/1
 Content-Type: application/json
 
 {
@@ -147,13 +165,13 @@ Content-Type: application/json
 
 ### 4. DELETE - Excluir tarefa
 
-**Endpoint:** `DELETE /api/tasks/{id}`
+**Endpoint:** `DELETE /api/v1/tasks/{id}`
 
 **Descrição:** Exclui uma tarefa do sistema.
 
 **Exemplo de requisição:**
 ```http
-DELETE http://localhost:8080/api/tasks/1
+DELETE http://localhost:8080/api/v1/tasks/1
 ```
 
 **Resposta de sucesso:** 204 No Content (sem corpo de resposta)
@@ -211,7 +229,7 @@ Ao buscar uma tarefa inexistente:
 
 **Requisição:**
 ```
-GET /api/tasks/999
+GET /api/v1/tasks/999
 ```
 
 **Resposta (404 Not Found):**
@@ -241,18 +259,39 @@ GET /api/tasks/999
 
 ## Estrutura do Projeto
 
+O projeto segue uma arquitetura em camadas organizada em pacotes:
+
 ```
 src/
 ├── main/
 │   ├── java/com/tarefas/
-│   │   ├── TaskManagementApplication.java  (classe principal)
-│   │   ├── Task.java                        (modelo/entidade)
-│   │   ├── TaskRepository.java              (repositório JPA)
-│   │   └── TaskController.java              (controlador REST)
+│   │   ├── TaskManagementApplication.java    (classe principal)
+│   │   ├── controller/
+│   │   │   └── TaskController.java           (endpoints REST)
+│   │   ├── service/
+│   │   │   └── TaskService.java              (lógica de negócio)
+│   │   ├── repository/
+│   │   │   └── TaskRepository.java           (acesso a dados)
+│   │   ├── model/
+│   │   │   └── Task.java                     (entidade JPA)
+│   │   ├── exception/
+│   │   │   ├── ResourceNotFoundException.java
+│   │   │   └── GlobalExceptionHandler.java
+│   │   └── config/
+│   │       └── OpenAPIConfig.java            (configuração Swagger)
 │   └── resources/
-│       └── application.properties           (configurações)
+│       └── application.properties
 └── test/
 ```
+
+### Camadas da Aplicação
+
+- **Controller**: Recebe requisições HTTP e retorna respostas
+- **Service**: Contém a lógica de negócio da aplicação
+- **Repository**: Faz a comunicação com o banco de dados
+- **Model**: Define as entidades do banco de dados
+- **Exception**: Trata erros e exceções da API
+- **Config**: Configurações da aplicação (Swagger, etc)
 
 ---
 
