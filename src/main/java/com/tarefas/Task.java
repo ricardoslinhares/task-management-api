@@ -1,6 +1,8 @@
 package com.tarefas;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,9 +13,12 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Título é obrigatório")
+    @Size(min = 3, max = 100, message = "Título deve ter entre 3 e 100 caracteres")
     @Column(nullable = false)
     private String titulo;
 
+    @Size(max = 500, message = "Descrição deve ter no máximo 500 caracteres")
     @Column(length = 500)
     private String descricao;
 

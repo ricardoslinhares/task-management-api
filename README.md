@@ -7,8 +7,17 @@ API RESTful desenvolvida em Spring Boot para gerenciamento de tarefas pessoais.
 - **Java 21**
 - **Spring Boot 3.3.5**
 - **Spring Data JPA**
+- **Spring Validation** (validação de dados)
 - **H2 Database** (banco de dados em memória)
 - **Maven**
+
+## Funcionalidades
+
+- ✅ CRUD completo de tarefas
+- ✅ Validação de dados com anotações
+- ✅ Tratamento de exceções personalizado
+- ✅ Respostas HTTP padronizadas
+- ✅ Mensagens de erro descritivas
 
 ## Como Executar o Projeto
 
@@ -160,6 +169,60 @@ DELETE http://localhost:8080/api/tasks/1
 | 204 No Content | Tarefa excluída com sucesso |
 | 400 Bad Request | Dados inválidos na requisição |
 | 404 Not Found | Tarefa não encontrada |
+| 500 Internal Server Error | Erro interno do servidor |
+
+---
+
+## Validações Implementadas
+
+### Regras de Validação
+
+- **Título**: Obrigatório, entre 3 e 100 caracteres
+- **Descrição**: Opcional, máximo 500 caracteres
+- **Concluída**: Campo booleano (true/false)
+
+### Exemplo de Erro de Validação
+
+Ao tentar criar uma tarefa com título inválido:
+
+**Requisição:**
+```json
+{
+  "titulo": "AB",
+  "descricao": "Descrição"
+}
+```
+
+**Resposta (400 Bad Request):**
+```json
+{
+  "timestamp": "2025-11-09T17:30:00",
+  "status": 400,
+  "error": "Erro de validação",
+  "errors": {
+    "titulo": "Título deve ter entre 3 e 100 caracteres"
+  }
+}
+```
+
+### Exemplo de Erro 404
+
+Ao buscar uma tarefa inexistente:
+
+**Requisição:**
+```
+GET /api/tasks/999
+```
+
+**Resposta (404 Not Found):**
+```json
+{
+  "timestamp": "2025-11-09T17:30:00",
+  "status": 404,
+  "error": "Recurso não encontrado",
+  "message": "Tarefa com ID 999 não encontrada"
+}
+```
 
 ---
 

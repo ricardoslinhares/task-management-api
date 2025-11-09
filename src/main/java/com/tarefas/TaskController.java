@@ -1,5 +1,6 @@
 package com.tarefas;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,9 @@ public class TaskController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Task> buscarPorId(@PathVariable Long id) {
-        return taskRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa com ID " + id + " não encontrada"));
+        return ResponseEntity.ok(task);
     }
 
     /**
@@ -40,10 +41,7 @@ public class TaskController {
      * Endpoint: POST /api/tasks
      */
     @PostMapping
-    public ResponseEntity<Task> criarTarefa(@RequestBody Task task) {
-        if (task.getTitulo() == null || task.getTitulo().trim().isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<Task> criarTarefa(@Valid @RequestBody Task task) {
         Task novaTarefa = taskRepository.save(task);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaTarefa);
     }
@@ -53,16 +51,16 @@ public class TaskController {
      * Endpoint: PUT /api/tasks/{id}
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Task> atualizarTarefa(@PathVariable Long id, @RequestBody Task taskAtualizada) {
-        return taskRepository.findById(id)
-                .map(task -> {
-                    task.setTitulo(taskAtualizada.getTitulo());
-                    task.setDescricao(taskAtualizada.getDescricao());
-                    task.setConcluida(taskAtualizada.getConcluida());
-                    Task taskSalva = taskRepository.save(task);
-                    return ResponseEntity.ok(taskSalva);
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Task> atualizarTarefa(@PathVariable Long id, @Valid @RequestBody Task taskAtualizada) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa com ID " + id + " não encontrada"));
+
+        task.setTitulo(taskAtualizada.getTitulo());
+        task.setDescricao(taskAtualizada.getDescricao());
+        task.setConcluida(taskAtualizada.getConcluida());
+
+        Task taskSalva = taskRepository.save(task);
+        return ResponseEntity.ok(taskSalva);
     }
 
     /**
@@ -71,11 +69,10 @@ public class TaskController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarTarefa(@PathVariable Long id) {
-        return taskRepository.findById(id)
-                .map(task -> {
-                    taskRepository.delete(task);
-                    return ResponseEntity.noContent().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tarefa com ID " + id + " não encontrada"));
+
+        taskRepository.delete(task);
+        return ResponseEntity.noContent().build();
     }
 }
